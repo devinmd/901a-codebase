@@ -82,9 +82,26 @@ void usercontrol(void)
 //
 // Main will set up the competition functions and callbacks.
 //
+
+// global instance of vex::brain used for printing to the V5 brain screen
+vex::brain Brain;
+
+controller controller1 = controller(controllerType::primary);
+
+
+motor leftFrontMotor = motor(PORT1 , true); // reverse motor
+motor leftBottomMotor = motor(PORT2);
+motor leftTopMotor = motor(PORT3);
+motor rightFrontMotor = motor(PORT4);
+motor rightBottomMotor = motor(PORT5);
+motor rightTopMotor = motor(PORT6);
+
+motor_group leftSide = motor_group(leftFrontMotor, leftBottomMotor, leftTopMotor);
+motor_group rightSide = motor_group(rightFrontMotor, rightBottomMotor, rightTopMotor);
+
 int main()
 {
-  // Set up callbacks for autonomous and driver control periods.
+  // Set up callbacks for autonomous and driver control periods
   Competition.autonomous(autonomous);
   Competition.drivercontrol(usercontrol);
 
@@ -95,5 +112,8 @@ int main()
   while (true)
   {
     wait(100, msec);
+
+    leftSide.spin(directionType::fwd, controller1.Axis3.position() + controller1.Axis1.position(), percentUnits::pct);
+    rightSide.spin(directionType::fwd, controller.Axis3.position() - controller1.Axis1.position(), percentUnits::pct);
   }
 }
